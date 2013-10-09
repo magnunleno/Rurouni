@@ -1,6 +1,8 @@
 Rurouni
 =======
 
+**Note:** Rurouni is at an early development stage
+
 A layer over SQL Alchemy that provides automatic migrations.
 
 The word rurouni actually doesn't exists in the Japanese vocabulary, is a
