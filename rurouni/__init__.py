@@ -32,3 +32,8 @@ due to our magic songs
 __version__ = "0.1.0"
 __author__ = "Magnun Leno"
 
+from rurouni import database
+from rurouni import types
+
+def getDatabase():
+        return database.DATABASE
