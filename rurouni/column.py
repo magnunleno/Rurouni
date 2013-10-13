@@ -3,11 +3,12 @@
 
 from sqlalchemy.schema import Column as _Column
 from sqlalchemy.types import AbstractType as _AbstractType
+from .exceptions import *
 
 class Column(object):
     def __init__(self, type, *args, **kwargs):
         if not isinstance(type(), _AbstractType):
-            raise TypeError, "Type should be from rurouni.types"
+            raise InvalidColumnType("Type should be from rurouni.types")
         self._type = type
         self._args = args
         self._kwargs = kwargs

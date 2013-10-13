@@ -20,6 +20,7 @@
 from sqlalchemy.schema import MetaData as _MetaData
 from sqlalchemy import create_engine as _create_engine
 from migrate.versioning.util import construct_engine as _construct_engine
+from .exceptions import *
 
 DATABASE = None
 
@@ -38,8 +39,15 @@ class Database(object):
 
         global DATABASE
         if DATABASE:
-            raise TypeError, "Database already initiated!"
+            raise DuplicatedConnection("Database already initiated!")
         DATABASE = self
+
+    def destroy(self):
+        global DATABASE
+        (d, e) = (DATABASE, self._engine)
+        (DATABASE, self._engine, self._metadata) = (None, None, None)
+        self._tables = {}
+        del e, d
 
     def _hasSQLATable(self, tablename):
         return self._engine.has_table(tablename)
