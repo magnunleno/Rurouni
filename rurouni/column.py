@@ -20,6 +20,9 @@ class Column(object):
         return self._sqla_column
 
     def __get__(self, obj, type=None):
+        if self._sqla_column.name == 'id':
+            return obj._id
+
         if not obj:
             return self
         table = obj.__sqlatable__
