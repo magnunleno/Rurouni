@@ -109,3 +109,12 @@ class Table(object):
         conn.close()
         for (id,) in result:
             yield kls(id, check=False)
+
+    @classmethod
+    def count(kls):
+        table = kls.__sqlatable__
+        s = _select([table.c.id]).count()
+        conn = kls.__db__._engine.connect()
+        result = conn.execute(s)
+        conn.close()
+        return result.scalar()
