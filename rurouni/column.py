@@ -3,6 +3,7 @@
 
 from sqlalchemy.schema import Column as _Column
 from sqlalchemy.types import AbstractType as _AbstractType
+from sqlalchemy.sql import select as _select
 from .exceptions import *
 
 class Column(object):
@@ -21,7 +22,28 @@ class Column(object):
     def __get__(self, obj, type=None):
         if not obj:
             return self
-        print 'get',obj, self._type, self._sqla_column
+        table = obj.__sqlatable__
+        db = obj.__db__
+        exp = table.columns.id == obj._id
+
+        conn = db._engine.connect()
+        sel = _select([self._sqla_column]).where(exp)
+        result = conn.execute(sel)
+        result = result.fetchone()
+        conn.close()
+
+        return result[0]
 
     def __set__(self, obj, value):
-        print 'set', obj, value
+        table = obj.__sqlatable__
+        db = obj.__db__
+        values = {self._sqla_column.name:value}
+        exp = table.columns.id == obj._id
+
+        conn = db._engine.connect()
+        update = table.update([table]).where(exp)
+        update.values(**values)
+
+        result = conn.execute(sel)
+        result = result.fetchone()
+        conn.close()
