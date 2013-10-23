@@ -72,3 +72,83 @@ def test_insert_many_errors(db):
         assert c.name == data['name']
         assert c.birthdate == data['birthdate']
     db.destroy()
+
+def test_hasId(db):
+    class Client(Table):
+        name = Column(String)
+        birthdate = Column(Date)
+
+    assert Client.has(1) == False
+    c = Client.insert(name='John', birthdate=randomDate())
+    assert c.id == 1
+    assert Client.has(1) == True
+    db.destroy()
+
+def test_delete(db):
+    class Client(Table):
+        name = Column(String)
+        birthdate = Column(Date)
+
+    data = [
+            {'name':'John', 'birthdate':randomDate()},
+            {'name':'Jack', 'birthdate':randomDate()},
+            {'name':'Bob', 'birthdate':randomDate()},
+            ]
+    Client.insert_many(*data)
+
+    assert Client.has(1) == True
+    assert Client.has(2) == True
+    assert Client.has(3) == True
+
+    Client.delete(2)
+
+    assert Client.has(1) == True
+    assert Client.has(2) == False
+    assert Client.has(3) == True
+    db.destroy()
+
+def test_iter(db):
+    class Client(Table):
+        name = Column(String)
+        birthdate = Column(Date)
+
+    data = [
+            {'name':'John', 'birthdate':randomDate()},
+            {'name':'Jack', 'birthdate':randomDate()},
+            {'name':'Bob', 'birthdate':randomDate()},
+            ]
+    Client.insert_many(*data)
+
+    count = 0
+    for (n, c) in enumerate(Client.all()):
+        vals = data[n]
+        assert c.id == n + 1
+        assert c.name == vals['name']
+        assert c.birthdate == vals['birthdate']
+        count += 1
+    assert count == 3
+    db.destroy()
+
+def test_count(db):
+    class Client(Table):
+        name = Column(String)
+        birthdate = Column(Date)
+
+    assert Client.count() == 0
+    Client.insert(name='John', birthdate=randomDate())
+    assert Client.count() == 1
+    Client.insert(name='Jack', birthdate=randomDate())
+    assert Client.count() == 2
+    Client.insert(name='Bob', birthdate=randomDate())
+    assert Client.count() == 3
+    db.destroy()
+
+def test_empty(db):
+    class Client(Table):
+        name = Column(String)
+        birthdate = Column(Date)
+
+    assert Client.isEmpty() == True
+    Client.insert(name='John', birthdate=randomDate())
+    assert Client.isEmpty() == False
+    db.destroy()
