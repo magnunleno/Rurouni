@@ -54,6 +54,13 @@ class Table(object):
         conn.close()
 
     @classmethod
+    def delete(kls, id):
+        table = kls.__sqlatable__
+        delete = table.delete().where(table.c.id == id)
+        conn = kls.__db__._engine.connect()
+        ret = conn.execute(delete)
+
+    @classmethod
     def insert_many(kls, *data):
         if not data or len(data) == 0:
             raise InvalidData("Empty data")
