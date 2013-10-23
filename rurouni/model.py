@@ -24,21 +24,20 @@ from sqlalchemy.sql import insert as _insert
 
 class Table(object):
     __metaclass__ = MetaTable
-    def __init__(self, id):
-        self._id = id
-
-    @classmethod
-    def getById(kls, id):
-        # TODO: review if this method is needed
-        s = _select([kls.id._sqla_column])
-        conn = kls.__db__._engine.connect()
-        result = conn.execute(s)
-        if result.fetchone():
-            conn.close()
-            return kls(id)
+    def __init__(self, id, check=True):
+        if check:
+            table = self.__sqlatable__
+            s = _select([table.c.id]).where(table.c.id == id).count()
+            conn = self.__db__._engine.connect()
+            result = conn.execute(s)
+            if result.scalar() == 1:
+                conn.close()
+                self._id = id
+            else:
+                conn.close()
+                raise UnknownInstanceID("%i"%id)
         else:
-            conn.close()
-            raise UnknownInstanceID("%i"%id)
+            self._id = id
 
     @classmethod
     def insert(kls, **kwargs):
@@ -51,7 +50,7 @@ class Table(object):
         if result.rowcount == 1:
             id = result.inserted_primary_key[0]
             conn.close()
-            return kls(id)
+            return kls(id, check=False)
         conn.close()
 
     @classmethod
