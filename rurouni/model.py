@@ -118,3 +118,7 @@ class Table(object):
         result = conn.execute(s)
         conn.close()
         return result.scalar()
+
+    @classmethod
+    def isEmpty(kls):
+        return kls.count() == 0
