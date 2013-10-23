@@ -99,3 +99,13 @@ class Table(object):
         scalar = result.scalar()
         conn.close()
         return scalar == 1
+
+    @classmethod
+    def all(kls):
+        table = kls.__sqlatable__
+        s = _select([table.c.id])
+        conn = kls.__db__._engine.connect()
+        result = conn.execute(s)
+        conn.close()
+        for (id,) in result:
+            yield kls(id, check=False)
