@@ -32,8 +32,7 @@ due to our magic songs
 __version__ = "0.1.0"
 __author__ = "Magnun Leno"
 
-from . import database
+from .column import Column
+from .model import Table
+from .database import getDatabase, Database
 from . import types
-
-def getDatabase():
-        return database.DATABASE

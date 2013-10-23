@@ -73,3 +73,6 @@ class Database(object):
         for tablename in sqlaTables - tables:
             table = self._metadata.tables[tablename]
             table.drop()
+
+def getDatabase():
+    return DATABASE
