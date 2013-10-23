@@ -89,3 +89,13 @@ class Table(object):
             conn.close()
             raise
         conn.close()
+
+    @classmethod
+    def has(kls, id):
+        table = kls.__sqlatable__
+        s = _select([table.c.id]).where(table.c.id == id).count()
+        conn = kls.__db__._engine.connect()
+        result = conn.execute(s)
+        scalar = result.scalar()
+        conn.close()
+        return scalar == 1
