@@ -26,3 +26,12 @@ class DuplicatedConnection(RurouniException):
 
 class InvalidColumnType(RurouniException):
     pass
+
+class UnknownInstanceID(RurouniException):
+    pass
+
+class UnknownField(RurouniException):
+    pass
+
+class InvalidData(RurouniException):
+    pass
