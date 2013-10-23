@@ -64,7 +64,7 @@ class LoggedDB(object):
 
 def randomDate():
     today = date.today()
-    day = int(ceil(random()*29))
+    day = int(ceil(random()*28))
     month = int(ceil(random()*12))
     return today.replace(day=day,month=month)
 
