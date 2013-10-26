@@ -121,8 +121,19 @@ def test_iter(db):
             ]
     Client.insert_many(*data)
 
+    # Iterate using Client.all()
     count = 0
     for (n, c) in enumerate(Client.all()):
+        vals = data[n]
+        assert c.id == n + 1
+        assert c.name == vals['name']
+        assert c.birthdate == vals['birthdate']
+        count += 1
+    assert count == 3
+
+    # Iterate using Client.__iter__
+    count = 0
+    for (n, c) in enumerate(Client):
         vals = data[n]
         assert c.id == n + 1
         assert c.name == vals['name']

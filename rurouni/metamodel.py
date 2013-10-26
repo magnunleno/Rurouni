@@ -93,3 +93,6 @@ class MetaTable(type):
 
     def __contains__(kls, id):
         return kls.has(id)
+
+    def __iter__(kls):
+        return kls.all()
