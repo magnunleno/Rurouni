@@ -90,3 +90,6 @@ class MetaTable(type):
             col.create(sqla_table, populate_default=True)
 
         return (sqla_table, old_columns)
+
+    def __contains__(kls, id):
+        return kls.has(id)

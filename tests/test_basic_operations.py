@@ -78,10 +78,12 @@ def test_hasId(db):
         name = Column(String)
         birthdate = Column(Date)
 
-    assert Client.has(1) == False
+    assert not Client.has(1)
+    assert not (1 in Client)
     c = Client.insert(name='John', birthdate=randomDate())
     assert c.id == 1
-    assert Client.has(1) == True
+    assert Client.has(1)
+    assert 1 in Client
     db.destroy()
 
 def test_delete(db):
