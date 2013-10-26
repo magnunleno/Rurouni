@@ -96,3 +96,6 @@ class MetaTable(type):
 
     def __iter__(kls):
         return kls.all()
+
+    def __len__(kls):
+        return kls.count()

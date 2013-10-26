@@ -148,12 +148,16 @@ def test_count(db):
         birthdate = Column(Date)
 
     assert Client.count() == 0
+    assert len(Client) == 0
     Client.insert(name='John', birthdate=randomDate())
     assert Client.count() == 1
+    assert len(Client) == 1
     Client.insert(name='Jack', birthdate=randomDate())
     assert Client.count() == 2
+    assert len(Client) == 2
     Client.insert(name='Bob', birthdate=randomDate())
     assert Client.count() == 3
+    assert len(Client) == 3
     db.destroy()
 
 def test_empty(db):
@@ -161,7 +165,7 @@ def test_empty(db):
         name = Column(String)
         birthdate = Column(Date)
 
-    assert Client.isEmpty() == True
+    assert Client.isEmpty()
     Client.insert(name='John', birthdate=randomDate())
-    assert Client.isEmpty() == False
+    assert not Client.isEmpty()
     db.destroy()
