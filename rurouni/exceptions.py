@@ -35,3 +35,6 @@ class UnknownField(RurouniException):
 
 class InvalidData(RurouniException):
     pass
+
+class InvalidId(RurouniException):
+    pass
