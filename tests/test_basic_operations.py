@@ -32,15 +32,15 @@ def test_insert(db):
     c2 = Client.insert(name=name2, birthdate=birthdate2)
     c3 = Client.insert(name=name3, birthdate=birthdate3)
 
-    assert c1._id == 1
+    assert c1.id == 1
     assert c1.name == name1
     assert c1.birthdate == birthdate1
 
-    assert c2._id == 2
+    assert c2.id == 2
     assert c2.name == name2
     assert c2.birthdate == birthdate2
 
-    assert c3._id == 3
+    assert c3.id == 3
     assert c3.name == name3
     assert c3.birthdate == birthdate3
 
@@ -107,6 +107,44 @@ def test_delete(db):
     assert Client.has(1) == True
     assert Client.has(2) == False
     assert Client.has(3) == True
+
+    with pytest.raises(InvalidId):
+        Client.delete(None)
+
+    Client.delete_all()
+
+    assert Client.has(1) == False
+    assert Client.has(2) == False
+    assert Client.has(3) == False
+    assert len(Client) == 0
+
+    db.destroy()
+
+def test_delete_many(db):
+    class Client(Table):
+        name = Column(String)
+        birthdate = Column(Date)
+
+    data = [
+            {'name':'John', 'birthdate':randomDate()},
+            {'name':'Jack', 'birthdate':randomDate()},
+            {'name':'Bob', 'birthdate':randomDate()},
+            {'name':'John', 'birthdate':randomDate()},
+            {'name':'Jack', 'birthdate':randomDate()},
+            {'name':'Bob', 'birthdate':randomDate()},
+            ]
+    Client.insert_many(*data)
+
+    Client.delete_many([1, 3, 5])
+
+    assert Client.has(1) == False
+    assert Client.has(2) == True
+    assert Client.has(3) == False
+    assert Client.has(4) == True
+    assert Client.has(5) == False
+    assert Client.has(6) == True
+    assert len(Client) == 3
+
     db.destroy()
 
 def test_iter(db):

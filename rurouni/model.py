@@ -55,10 +55,34 @@ class Table(object):
 
     @classmethod
     def delete(kls, id):
+        if type(id) not in (int, long):
+            raise InvalidId("ID must be int or long")
+
         table = kls.__sqlatable__
-        delete = table.delete().where(table.c.id == id)
         conn = kls.__db__._engine.connect()
+        delete = table.delete().where(table.c.id == id)
         ret = conn.execute(delete)
+        conn.close()
+
+    @classmethod
+    def delete_all(kls):
+        table = kls.__sqlatable__
+        conn = kls.__db__._engine.connect()
+        delete = table.delete()
+        ret = conn.execute(delete)
+        conn.close()
+
+    @classmethod
+    def delete_many(kls, ids):
+        if not hasattr(ids, '__iter__'):
+            raise TypeError, "ids must be iterable"
+
+        table = kls.__sqlatable__
+        conn = kls.__db__._engine.connect()
+        for id in ids:
+            delete = table.delete().where(table.c.id == id)
+            ret = conn.execute(delete)
+        conn.close()
 
     @classmethod
     def insert_many(kls, *data):
@@ -122,3 +146,5 @@ class Table(object):
     @classmethod
     def isEmpty(kls):
         return kls.count() == 0
+
+    # TODO: Add context managers
