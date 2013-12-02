@@ -15,11 +15,13 @@ def test_column_appending(ldb):
     '''
     # First declaration
     class Client(Table):
+        __db__ = ldb.db
         pass
     ldb.flush()
 
     # Second declaration
     class NewClient(Table):
+        __db__ = ldb.db
         __tablename__ = 'client'
         name = Column(String)
 
@@ -40,12 +42,14 @@ def test_column_removal(ldb):
 
     # First declaration
     class Client(Table):
+        __db__ = ldb.db
         firstname = Column(String)
         lastname = Column(String)
     ldb.flush()
 
     # Second declaration
     class NewClient(Table):
+        __db__ = ldb.db
         __tablename__ = 'client'
         firstname = Column(String)
 
@@ -74,13 +78,16 @@ def test_table_removal(tmp_ldb):
     '''
     # Define two tables
     class Client(Table):
+        __db__ = tmp_ldb.db
         pass
     class Profession(Table):
+        __db__ = tmp_ldb.db
         pass
 
     # Reopen db and define only one table
     tmp_ldb.reopen()
     class Client(Table):
+        __db__ = tmp_ldb.db
         pass
 
     tmp_ldb.flush() # Flush output

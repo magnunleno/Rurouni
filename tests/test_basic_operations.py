@@ -8,6 +8,7 @@ from rurouni import Database, Column, Table
 
 def test_insert_errors(db):
     class Client(Table):
+        __db__ = db
         name = Column(String)
         birthdate = Column(Date)
 
@@ -19,6 +20,7 @@ def test_insert_errors(db):
 
 def test_insert(db):
     class Client(Table):
+        __db__ = db
         name = Column(String)
         birthdate = Column(Date)
     
@@ -48,6 +50,7 @@ def test_insert(db):
 
 def test_insert_many_errors(db):
     class Client(Table):
+        __db__ = db
         name = Column(String)
         birthdate = Column(Date)
     
@@ -75,6 +78,7 @@ def test_insert_many_errors(db):
 
 def test_hasId(db):
     class Client(Table):
+        __db__ = db
         name = Column(String)
         birthdate = Column(Date)
 
@@ -88,6 +92,7 @@ def test_hasId(db):
 
 def test_delete(db):
     class Client(Table):
+        __db__ = db
         name = Column(String)
         birthdate = Column(Date)
 
@@ -116,12 +121,13 @@ def test_delete(db):
     assert Client.has(1) == False
     assert Client.has(2) == False
     assert Client.has(3) == False
-    assert len(Client) == 0
+    assert Client.isEmpty()
 
     db.destroy()
 
 def test_delete_many(db):
     class Client(Table):
+        __db__ = db
         name = Column(String)
         birthdate = Column(Date)
 
@@ -149,6 +155,7 @@ def test_delete_many(db):
 
 def test_iter(db):
     class Client(Table):
+        __db__ = db
         name = Column(String)
         birthdate = Column(Date)
 
@@ -182,6 +189,7 @@ def test_iter(db):
 
 def test_count(db):
     class Client(Table):
+        __db__ = db
         name = Column(String)
         birthdate = Column(Date)
 
@@ -200,6 +208,7 @@ def test_count(db):
 
 def test_empty(db):
     class Client(Table):
+        __db__ = db
         name = Column(String)
         birthdate = Column(Date)
 
