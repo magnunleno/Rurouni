@@ -48,7 +48,7 @@ class Database(object):
         return self._metadata.tables[tablename]
 
     def _getSQLATableNames(self):
-        return self._engine.tables_names()
+        return self._engine.table_names()
 
     def hasTable(self, tablename):
         return tablename in self._tables
@@ -59,9 +59,25 @@ class Database(object):
     def getTableNames(self):
         return self._tables.keys()
 
+    def all(self):
+        return self._tables.values()
+
     def autoClean(self):
         sqlaTables = set(self._metadata.tables.keys())
         tables = set(self._tables.keys())
         for tablename in sqlaTables - tables:
             table = self._metadata.tables[tablename]
             table.drop()
+
+    def __iter__(self):
+        for table in self._tables.values():
+            yield table
+
+    def __getitem__(self, key):
+        if key not in self._tables:
+            return None
+
+        return self._tables[key]
+    
+    def __len__(self):
+        return len(self._tables)

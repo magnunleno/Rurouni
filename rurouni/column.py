@@ -20,14 +20,15 @@ class Column(object):
         return self._sqla_column
 
     def __get__(self, obj, type=None):
+        # TODO: Implement cache
         if self._sqla_column.name == 'id':
             return obj._id
 
         if not obj:
             return self
-        table = obj.__sqlatable__
+        sqla_table = obj.__sqlatable__
         db = obj.__db__
-        exp = table.columns.id == obj._id
+        exp = sqla_table.columns.id == obj._id
 
         conn = db._engine.connect()
         sel = _select([self._sqla_column]).where(exp)
@@ -38,13 +39,13 @@ class Column(object):
         return result[0]
 
     def __set__(self, obj, value):
-        table = obj.__sqlatable__
+        sqla_table = obj.__sqlatable__
         db = obj.__db__
         values = {self._sqla_column.name:value}
-        exp = table.columns.id == obj._id
+        exp = sqla_table.columns.id == obj._id
 
         conn = db._engine.connect()
-        update = table.update([table]).where(exp)
+        update = sqla_table.update([sqla_table]).where(exp)
         update.values(**values)
 
         result = conn.execute(sel)
