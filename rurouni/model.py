@@ -24,6 +24,7 @@ from sqlalchemy.sql import insert as _insert
 
 class Table(object):
     __metaclass__ = MetaTable
+    __db__ = None
     def __init__(self, id, check=True):
         if check:
             table = self.__sqlatable__
@@ -146,5 +147,9 @@ class Table(object):
     @classmethod
     def isEmpty(kls):
         return kls.count() == 0
+
+    @classmethod
+    def filter(kls, expression):
+        pass
 
     # TODO: Add context managers

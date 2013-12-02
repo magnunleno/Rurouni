@@ -34,5 +34,5 @@ __author__ = "Magnun Leno"
 
 from .column import Column
 from .model import Table
-from .database import getDatabase, Database
+from .database import Database
 from . import types

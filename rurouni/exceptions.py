@@ -21,9 +21,6 @@ class RurouniException(Exception):
     def __init__(self, message):
         Exception.__init__(self, message)
 
-class DuplicatedConnection(RurouniException):
-    pass
-
 class InvalidColumnType(RurouniException):
     pass
 

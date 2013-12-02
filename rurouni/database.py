@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # encoding: utf-8
-
+#
 # Copyright (C) 2012 - Magnun Leno
 #
 # This file is part of Rurouni.
@@ -22,8 +22,6 @@ from sqlalchemy import create_engine as _create_engine
 from migrate.versioning.util import construct_engine as _construct_engine
 from .exceptions import *
 
-DATABASE = None
-
 class Database(object):
     def __init__(self, *args, **kwargs):
         engine = _create_engine(*args, **kwargs)
@@ -37,17 +35,11 @@ class Database(object):
         self.autoremove_columns = False
         self.autoremove_tables = False
 
-        global DATABASE
-        if DATABASE:
-            raise DuplicatedConnection("Database already initiated!")
-        DATABASE = self
-
     def destroy(self):
-        global DATABASE
-        (d, e) = (DATABASE, self._engine)
-        (DATABASE, self._engine, self._metadata) = (None, None, None)
+        e = self._engine
+        (self._engine, self._metadata) = (None, None)
         self._tables = {}
-        del e, d
+        del e
 
     def _hasSQLATable(self, tablename):
         return self._engine.has_table(tablename)
@@ -64,7 +56,7 @@ class Database(object):
     def getTable(self, tablename):
         return self._tables.get(tablename, None)
 
-    def getTableNames(self, tablename):
+    def getTableNames(self):
         return self._tables.keys()
 
     def autoClean(self):
@@ -73,6 +65,3 @@ class Database(object):
         for tablename in sqlaTables - tables:
             table = self._metadata.tables[tablename]
             table.drop()
-
-def getDatabase():
-    return DATABASE

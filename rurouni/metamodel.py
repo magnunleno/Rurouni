@@ -18,7 +18,6 @@
 # Rurouni If not, see http://www.gnu.org/licenses/.
 
 from .column import Column
-from .database import getDatabase
 
 from sqlalchemy.schema import Table as _Table
 from sqlalchemy.types import Integer as _Integer
@@ -44,7 +43,8 @@ class MetaTable(type):
             columns['id'] = Column(_Integer, primary_key=True)
             setattr(table, 'id', columns['id'])
 
-        db = getDatabase()
+        #db = getDatabase()
+        db = table.__db__
         if not db._hasSQLATable(tablename):
             (sqla_table, sqla_columns) = MetaTable.createTable(db, table, columns)
         else:
@@ -54,7 +54,7 @@ class MetaTable(type):
         db._tables[tablename] = table
 
         # Inject some informations in the table
-        table.__db__ = db
+        #table.__db__ = db
         table.__sqlatable__ = sqla_table
         table.__sqlacolumns__ = sqla_columns
         table.__columns__ = columns
@@ -99,3 +99,5 @@ class MetaTable(type):
 
     def __len__(kls):
         return kls.count()
+
+    # TODO: Add context managers
